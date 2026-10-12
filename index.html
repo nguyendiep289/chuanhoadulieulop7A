@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu thu thập chuẩn hóa dữ liệu học sinh - Lớp 7A</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding: 15px; padding-top: 20px;
+        }
+        .container {
+            background: white; border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            padding: 25px 20px; max-width: 560px; width: 100%;
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn { from {opacity:0;transform:translateY(-20px);} to {opacity:1;transform:translateY(0);} }
+        .school-header {
+            text-align: center;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+        .school-name { font-size: 15px; font-weight: 700; color: #333; line-height: 1.4; }
+        .school-name .highlight { color: #667eea; }
+        h1 { text-align: center; color: #333; font-size: 18px; margin-bottom: 4px; }
+        .subtitle { text-align: center; color: #888; font-size: 12px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-weight: 600; color: #555; margin-bottom: 5px; font-size: 12.5px; }
+        input[type="text"], input[type="number"], input[type="tel"], select.full-select {
+            width: 100%; padding: 10px 13px; border: 2px solid #e0e0e0;
+            border-radius: 10px; font-size: 14.5px; transition: all 0.3s ease;
+            background: #fafafa; color: #333; font-family: inherit;
+        }
+        select.full-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 13px center;
+            cursor: pointer;
+        }
+        input::placeholder { color: #aaa; font-style: italic; font-size: 13px; }
+        input:focus, select.full-select:focus { outline: none; border-color: #667eea; background-color: white; box-shadow: 0 0 0 4px rgba(102,126,234,0.1); }
+        input:hover, select.full-select:hover { border-color: #667eea; }
+        .section-title {
+            font-size: 13px; font-weight: 700; color: #667eea;
+            margin: 18px 0 10px 0; padding: 8px 10px;
+            background: linear-gradient(90deg, #f0f2ff, transparent);
+            border-left: 3px solid #667eea;
+            border-radius: 6px;
+        }
+        .date-hint { font-size: 10.5px; color: #888; margin-top: 4px; font-style: italic; }
+        .radio-options { display: grid; gap: 8px; margin-top: 4px; }
+        .radio-options.cols-2 { grid-template-columns: 1fr 1fr; }
+        .radio-options.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .radio-option { position: relative; }
+        .radio-option input[type="radio"] { display: none; }
+        .radio-option label {
+            display: flex; align-items: center; justify-content: center;
+            padding: 10px 6px; border: 2px solid #e0e0e0; border-radius: 10px;
+            cursor: pointer; font-size: 13px; font-weight: 600; color: #555;
+            transition: all 0.3s ease; background: #fafafa; margin: 0;
+            min-height: 44px; text-align: center;
+        }
+        .radio-option label:hover { border-color: #667eea; background: #f0f2ff; transform: translateY(-2px); }
+        .radio-option input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; box-shadow: 0 5px 15px rgba(102,126,234,0.4); transform: scale(1.03);
+        }
+        .radio-option input[type="radio"]:checked + label::after { content: " ✓"; font-size: 13px; }
+        .btn-submit {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s ease; margin-top: 20px; letter-spacing: 0.5px;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102,126,234,0.4); }
+        .btn-submit:disabled { opacity: 0.6; cursor: wait; transform: none; }
+        .btn-reset {
+            width: 100%; padding: 11px; background: #f0f0f0; color: #555;
+            border: none; border-radius: 10px; font-size: 14px;
+            cursor: pointer; transition: all 0.3s ease; margin-top: 8px;
+        }
+        .btn-reset:hover { background: #e0e0e0; }
+        .summary { display: none; margin-top: 20px; }
+        .summary.show { display: block; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from {opacity:0;transform:scale(0.96);} to {opacity:1;transform:scale(1);} }
+        .summary-card {
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9ff 100%);
+            border: 2px solid #667eea; border-radius: 14px; overflow: hidden;
+            box-shadow: 0 8px 25px rgba(102,126,234,0.15);
+        }
+        .summary-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; text-align: center; padding: 14px 12px;
+        }
+        .summary-header .school { font-size: 12px; font-weight: 600; opacity: 0.95; line-height: 1.3; }
+        .summary-header .title { font-size: 15px; font-weight: 800; margin-top: 4px; letter-spacing: 0.5px; }
+        .summary-body { padding: 12px 14px 16px 14px; max-height: 65vh; overflow-y: auto; }
+        .summary-row {
+            display: flex; padding: 7px 0; border-bottom: 1px dashed #e0e4f5;
+            align-items: flex-start; font-size: 12.5px;
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-row .key {
+            color: #667eea; font-weight: 700; width: 48%;
+            flex-shrink: 0; padding-right: 6px; line-height: 1.35;
+        }
+        .summary-row .value {
+            color: #222; font-weight: 600; flex: 1;
+            word-break: break-word; line-height: 1.35; text-align: right;
+        }
+        .summary-divider {
+            text-align: center; font-size: 11px; font-weight: 700;
+            color: #667eea; margin: 10px 0 6px 0; letter-spacing: 1px;
+        }
+        .summary-footer {
+            background: #f0f2ff; padding: 10px; text-align: center;
+            font-size: 10px; color: #667eea; font-weight: 600;
+            border-top: 1px solid #e0e4f5;
+        }
+        .btn-edit {
+            width: 100%; padding: 11px; background: #fff; color: #667eea;
+            border: 2px solid #667eea; border-radius: 10px; font-size: 14px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 12px;
+        }
+        .btn-edit:hover { background: #667eea; color: white; }
+        .status-toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            padding: 14px 24px; border-radius: 12px; color: white;
+            font-weight: 600; font-size: 14px; z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.4s ease;
+            display: flex; align-items: center; gap: 8px;
+            max-width: 90%;
+        }
+        .status-toast.show { transform: translateX(-50%) translateY(0); }
+        .status-toast.success { background: linear-gradient(135deg, #4CAF50, #45a049); }
+        .status-toast.error { background: linear-gradient(135deg, #f44336, #d32f2f); }
+        .status-toast.info { background: linear-gradient(135deg, #667eea, #764ba2); }
+        @media (max-width: 400px) {
+            .container { padding: 20px 15px; }
+            h1 { font-size: 16px; }
+            .summary-row { font-size: 12px; }
+            .summary-row .key { width: 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="school-header">
+            <div class="school-name">
+                🏫 Trường <span class="highlight">THCS Tây Thái Ninh</span> - Lớp 7A
+            </div>
+        </div>
+
+        <div id="formSection">
+            <h1>📋 PHIẾU THU THẬP CHUẨN HÓA DỮ LIỆU HỌC SINH</h1>
+            <p class="subtitle">Vui lòng điền đầy đủ và chính xác thông tin</p>
+
+            <form id="certForm" novalidate autocomplete="off">
+
+                <!-- ============ NHÓM 1: THÔNG TIN HỌC SINH ============ -->
+                <div class="section-title">👤 Thông tin học sinh</div>
+
+                <div class="form-group">
+                    <label for="hoTen">Họ và tên học sinh</label>
+                    <input type="text" id="hoTen" placeholder="VD: Nguyễn Văn A" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="ngaySinh">Ngày tháng năm sinh</label>
+                    <input type="text" id="ngaySinh" placeholder="VD: 31052003 → 31/05/2003" inputmode="numeric" maxlength="10" autocomplete="off">
+                    <div class="date-hint">💡 Gõ liền 8 số: ngày tháng năm (VD: 31052003 → tự động thành 31/05/2003)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="noiSinh">Nơi sinh</label>
+                    <input type="text" id="noiSinh" list="noiSinhOptions" placeholder="Chọn hoặc nhập nơi sinh..." autocomplete="off">
+                    <datalist id="noiSinhOptions">
+                        <option value="Bệnh viện phụ sản Thái Bình">
+                        <option value="Bệnh viện đa khoa Thái Ninh">
+                        <option value="Trạm y tế xã Thái Giang">
+                    </datalist>
+                    <div class="date-hint">💡 Chọn từ gợi ý hoặc nhập nơi sinh khác nếu không có trong danh sách</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Giới tính</label>
+                    <div class="radio-options cols-2" id="genderOptions">
+                        <div class="radio-option">
+                            <input type="radio" id="gNam" name="gender" value="Nam">
+                            <label for="gNam">👨 Nam</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="gNu" name="gender" value="Nữ">
+                            <label for="gNu">👩 Nữ</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="soCanCuoc">Số Căn cước</label>
+                    <input type="text" id="soCanCuoc" placeholder="Nhập 12 số căn cước" inputmode="numeric" maxlength="12" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="ngayCap">Ngày cấp</label>
+                    <input type="text" id="ngayCap" placeholder="VD: 15062021 → 15/06/2021" inputmode="numeric" maxlength="10" autocomplete="off">
+                    <div class="date-hint">💡 Gõ liền 8 số: ngày tháng năm</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="noiCap">Nơi cấp</label>
+                    <input type="text" id="noiCap" value="Bộ Công An" autocomplete="off">
+                    <div class="date-hint">💡 Mặc định "Bộ Công An" — sửa nếu khác</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="danToc">Dân tộc</label>
+                    <input type="text" id="danToc" value="Kinh" autocomplete="off">
+                </div>
+
+                <!-- ============ NHÓM 2: TÌNH TRẠNG SỨC KHỎE ============ -->
+                <div class="section-title">🩺 Tình trạng sức khỏe</div>
+
+                <div class="form-group">
+                    <label>Biết bơi</label>
+                    <div class="radio-options cols-2" id="bietBoiOptions">
+                        <div class="radio-option">
+                            <input type="radio" id="boiCo" name="bietBoi" value="Có">
+                            <label for="boiCo">✅ Có</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="boiChua" name="bietBoi" value="Chưa">
+                            <label for="boiChua">❌ Chưa</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Bệnh về mắt</label>
+                    <div class="radio-options cols-3" id="benhMatOptions">
+                        <div class="radio-option">
+                            <input type="radio" id="matCan" name="benhMat" value="Cận thị">
+                            <label for="matCan">👓 Cận thị</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="matLac" name="benhMat" value="Lác">
+                            <label for="matLac">👁️ Lác</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="matBt" name="benhMat" value="Bình thường">
+                            <label for="matBt">✅ Bình thường</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ NHÓM 3: LIÊN HỆ ============ -->
+                <div class="section-title">📞 Thông tin liên hệ</div>
+
+                <div class="form-group">
+                    <label for="dienThoai">Điện thoại liên hệ khi cần</label>
+                    <input type="tel" id="dienThoai" placeholder="VD: 0912345678" inputmode="numeric" maxlength="11" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="diaChi">Địa chỉ thường trú</label>
+                    <input type="text" id="diaChi" list="diaChiOptions" placeholder="Chọn hoặc nhập địa chỉ..." autocomplete="off" name="diaChiNoAutofill">
+                    <datalist id="diaChiOptions">
+                        <option value="Thôn Thái Giang, xã Tây Thái Ninh, Tỉnh Hưng Yên">
+			<option value="Thôn Trung Liệt, xã Tây Thái Ninh, Tỉnh Hưng Yên">
+                        <option value="Thôn Phất Lộc, xã Tây Thái Ninh, Tỉnh Hưng Yên">
+                    </datalist>
+                    <div class="date-hint">💡 Chọn từ gợi ý hoặc nhập địa chỉ khác nếu không có trong danh sách</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="queQuan">Quê quán</label>
+                    <input type="text" id="queQuan" placeholder="VD: Thái Giang, Thái Thụy, Thái Bình" autocomplete="off">
+                </div>
+
+                <!-- ============ NHÓM 4: THÔNG TIN BỐ ============ -->
+                <div class="section-title">👨 Thông tin bố</div>
+
+                <div class="form-group">
+                    <label for="tenBo">Họ và tên bố</label>
+                    <input type="text" id="tenBo" placeholder="VD: Nguyễn Văn B" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="ngheBo">Nghề nghiệp bố</label>
+                    <input type="text" id="ngheBo" placeholder="VD: Nông dân" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="namSinhBo">Năm sinh của bố</label>
+                    <input type="text" id="namSinhBo" placeholder="VD: 1975" inputmode="numeric" maxlength="4" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="sdtBo">Số điện thoại bố</label>
+                    <input type="tel" id="sdtBo" placeholder="VD: 0912345678" inputmode="numeric" maxlength="11" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="cccdBo">Số căn cước của bố</label>
+                    <input type="text" id="cccdBo" placeholder="Nhập 12 số căn cước" inputmode="numeric" maxlength="12" autocomplete="off">
+                </div>
+
+                <!-- ============ NHÓM 5: THÔNG TIN MẸ ============ -->
+                <div class="section-title">👩 Thông tin mẹ</div>
+
+                <div class="form-group">
+                    <label for="tenMe">Họ và tên mẹ</label>
+                    <input type="text" id="tenMe" placeholder="VD: Trần Thị C" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="ngheMe">Nghề nghiệp mẹ</label>
+                    <input type="text" id="ngheMe" placeholder="VD: Buôn bán" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="namSinhMe">Năm sinh của mẹ</label>
+                    <input type="text" id="namSinhMe" placeholder="VD: 1978" inputmode="numeric" maxlength="4" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="sdtMe">Số điện thoại mẹ</label>
+                    <input type="tel" id="sdtMe" placeholder="VD: 0912345678" inputmode="numeric" maxlength="11" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="cccdMe">Số căn cước của mẹ</label>
+                    <input type="text" id="cccdMe" placeholder="Nhập 12 số căn cước" inputmode="numeric" maxlength="12" autocomplete="off">
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnSubmit">✅ XÁC NHẬN GỬI</button>
+                <button type="reset" class="btn-reset">🔄 Làm mới</button>
+            </form>
+        </div>
+
+        <!-- ===== BẢNG TỔNG HỢP ===== -->
+        <div class="summary" id="summarySection">
+            <div class="summary-card">
+                <div class="summary-header">
+                    <div class="school">TRƯỜNG THCS TÂY THÁI NINH - LỚP 7A</div>
+                    <div class="title">PHIẾU THU THẬP CHUẨN HÓA DỮ LIỆU HỌC SINH</div>
+                </div>
+                <div class="summary-body" id="summaryBody"></div>
+                <div class="summary-footer">
+                    ✅ ĐÃ GỬI DỮ LIỆU THÀNH CÔNG
+                </div>
+            </div>
+            <button class="btn-edit" id="btnEdit">✏️ Chỉnh sửa lại</button>
+        </div>
+    </div>
+
+    <div class="status-toast" id="toast"></div>
+
+    <script>
+        // ⚠️ THAY URL NÀY BẰNG URL GOOGLE APPS SCRIPT CỦA BẠN
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyiUQ-gMN-RLGu0uwe4pChYMxedeKf2WJw60UyGvU2-ChWWLLq7NZsldLWOpjC0mOaR/exec';
+
+        const DEFAULTS = {
+            danToc: 'Kinh',
+            noiCap: 'Bộ Công An'
+        };
+
+        const FIELDS = [
+            { id: 'hoTen',       label: 'Họ và tên học sinh',      group: 'hs' },
+            { id: 'ngaySinh',    label: 'Ngày tháng năm sinh',      group: 'hs' },
+            { id: 'noiSinh',     label: 'Nơi sinh',                 group: 'hs' },
+            { id: 'gender',      label: 'Giới tính',                group: 'hs' },
+            { id: 'soCanCuoc',   label: 'Số Căn cước',              group: 'hs' },
+            { id: 'ngayCap',     label: 'Ngày cấp',                 group: 'hs' },
+            { id: 'noiCap',      label: 'Nơi cấp',                  group: 'hs' },
+            { id: 'danToc',      label: 'Dân tộc',                  group: 'hs' },
+            { id: 'bietBoi',     label: 'Biết bơi',                 group: 'sk' },
+            { id: 'benhMat',     label: 'Bệnh về mắt',              group: 'sk' },
+            { id: 'dienThoai',   label: 'Điện thoại liên hệ',       group: 'lh' },
+            { id: 'diaChi',      label: 'Địa chỉ thường trú',       group: 'lh' },
+            { id: 'queQuan',     label: 'Quê quán',                 group: 'lh' },
+            { id: 'tenBo',       label: 'Họ và tên bố',             group: 'bo' },
+            { id: 'ngheBo',      label: 'Nghề nghiệp bố',           group: 'bo' },
+            { id: 'namSinhBo',   label: 'Năm sinh của bố',          group: 'bo' },
+            { id: 'sdtBo',       label: 'Số điện thoại bố',         group: 'bo' },
+            { id: 'cccdBo',      label: 'Số căn cước của bố',       group: 'bo' },
+            { id: 'tenMe',       label: 'Họ và tên mẹ',             group: 'me' },
+            { id: 'ngheMe',      label: 'Nghề nghiệp mẹ',           group: 'me' },
+            { id: 'namSinhMe',   label: 'Năm sinh của mẹ',          group: 'me' },
+            { id: 'sdtMe',       label: 'Số điện thoại mẹ',         group: 'me' },
+            { id: 'cccdMe',      label: 'Số căn cước của mẹ',       group: 'me' }
+        ];
+
+        const GROUP_LABELS = {
+            hs: '👤 THÔNG TIN HỌC SINH',
+            sk: '🩺 TÌNH TRẠNG SỨC KHỎE',
+            lh: '📞 THÔNG TIN LIÊN HỆ',
+            bo: '👨 THÔNG TIN BỐ',
+            me: '👩 THÔNG TIN MẸ'
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('certForm');
+            const formSection = document.getElementById('formSection');
+            const summarySection = document.getElementById('summarySection');
+            const summaryBody = document.getElementById('summaryBody');
+            const btnEdit = document.getElementById('btnEdit');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const toast = document.getElementById('toast');
+
+            const ngaySinhInput = document.getElementById('ngaySinh');
+            const ngayCapInput = document.getElementById('ngayCap');
+
+            function showToast(message, type) {
+                toast.textContent = message;
+                toast.className = 'status-toast ' + type + ' show';
+                setTimeout(() => { toast.classList.remove('show'); }, 3500);
+            }
+
+            function formatDateInput(input) {
+                input.addEventListener('input', function () {
+                    let v = this.value.replace(/[^0-9]/g, '');
+                    if (v.length > 8) v = v.slice(0, 8);
+                    let formatted = '';
+                    if (v.length <= 2) {
+                        formatted = v;
+                    } else if (v.length <= 4) {
+                        formatted = v.slice(0, 2) + '/' + v.slice(2);
+                    } else {
+                        formatted = v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4, 8);
+                    }
+                    this.value = formatted;
+                });
+            }
+            formatDateInput(ngaySinhInput);
+            formatDateInput(ngayCapInput);
+
+            ['soCanCuoc', 'cccdBo', 'cccdMe'].forEach(id => {
+                document.getElementById(id).addEventListener('input', function () {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+            });
+            ['sdtBo', 'sdtMe', 'dienThoai'].forEach(id => {
+                document.getElementById(id).addEventListener('input', function () {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+            });
+            ['namSinhBo', 'namSinhMe'].forEach(id => {
+                document.getElementById(id).addEventListener('input', function () {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+            });
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                let selectedGender = '';
+                document.querySelectorAll('input[name="gender"]').forEach(r => {
+                    if (r.checked) selectedGender = r.value;
+                });
+
+                let selectedBietBoi = '';
+                document.querySelectorAll('input[name="bietBoi"]').forEach(r => {
+                    if (r.checked) selectedBietBoi = r.value;
+                });
+
+                let selectedBenhMat = '';
+                document.querySelectorAll('input[name="benhMat"]').forEach(r => {
+                    if (r.checked) selectedBenhMat = r.value;
+                });
+
+                const data = {
+                    hoTen: document.getElementById('hoTen').value.trim(),
+                    ngaySinh: ngaySinhInput.value.trim(),
+                    noiSinh: document.getElementById('noiSinh').value.trim(),
+                    gender: selectedGender,
+                    soCanCuoc: document.getElementById('soCanCuoc').value.trim(),
+                    ngayCap: ngayCapInput.value.trim(),
+                    noiCap: document.getElementById('noiCap').value.trim(),
+                    danToc: document.getElementById('danToc').value.trim(),
+                    bietBoi: selectedBietBoi,
+                    benhMat: selectedBenhMat,
+                    dienThoai: document.getElementById('dienThoai').value.trim(),
+                    diaChi: document.getElementById('diaChi').value.trim(),
+                    queQuan: document.getElementById('queQuan').value.trim(),
+                    tenBo: document.getElementById('tenBo').value.trim(),
+                    ngheBo: document.getElementById('ngheBo').value.trim(),
+                    namSinhBo: document.getElementById('namSinhBo').value.trim(),
+                    sdtBo: document.getElementById('sdtBo').value.trim(),
+                    cccdBo: document.getElementById('cccdBo').value.trim(),
+                    tenMe: document.getElementById('tenMe').value.trim(),
+                    ngheMe: document.getElementById('ngheMe').value.trim(),
+                    namSinhMe: document.getElementById('namSinhMe').value.trim(),
+                    sdtMe: document.getElementById('sdtMe').value.trim(),
+                    cccdMe: document.getElementById('cccdMe').value.trim()
+                };
+
+                summaryBody.innerHTML = '';
+                let currentGroup = null;
+                FIELDS.forEach(f => {
+                    if (f.group !== currentGroup) {
+                        currentGroup = f.group;
+                        const divider = document.createElement('div');
+                        divider.className = 'summary-divider';
+                        divider.textContent = GROUP_LABELS[f.group];
+                        summaryBody.appendChild(divider);
+                    }
+                    const row = document.createElement('div');
+                    row.className = 'summary-row';
+                    const val = data[f.id] ? data[f.id] : '—';
+                    row.innerHTML = `<div class="key">${f.label}:</div><div class="value">${val}</div>`;
+                    summaryBody.appendChild(row);
+                });
+
+                btnSubmit.disabled = true;
+                btnSubmit.textContent = '⏳ Đang gửi...';
+                showToast('⏳ Đang gửi dữ liệu...', 'info');
+
+                try {
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: JSON.stringify(data)
+                    });
+
+                    formSection.style.display = 'none';
+                    summarySection.classList.add('show');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    showToast('✅ Đã gửi thông tin thành công!', 'success');
+
+                } catch (err) {
+                    showToast('❌ Lỗi kết nối. Vui lòng kiểm tra mạng!', 'error');
+                    console.error(err);
+                } finally {
+                    btnSubmit.disabled = false;
+                    btnSubmit.textContent = '✅ XÁC NHẬN GỬI';
+                }
+            });
+
+            btnEdit.addEventListener('click', function () {
+                summarySection.classList.remove('show');
+                formSection.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            form.addEventListener('reset', function () {
+                setTimeout(() => {
+                    Object.keys(DEFAULTS).forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.value = DEFAULTS[id];
+                    });
+                }, 0);
+            });
+        });
+    </script>
+</body>
+</html>
